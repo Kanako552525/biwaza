@@ -30,7 +30,14 @@ export default function CompanyPage() {
                 <th className="bg-stone-50 px-4 py-3 text-left font-medium text-stone-700">
                   代表者
                 </th>
-                <td className="px-4 py-3 text-stone-600">樫村 香那子</td>
+                <td className="px-4 py-3 text-stone-600">
+                  <img
+                    src="/representative.svg"
+                    alt="代表者名"
+                    className="h-5 inline-block"
+                    draggable={false}
+                  />
+                </td>
               </tr>
               <tr className="border-b border-stone-200">
                 <th className="bg-stone-50 px-4 py-3 text-left font-medium text-stone-700">
