@@ -47,6 +47,9 @@ export default function Footer() {
               <Link href="/contact" className="block text-sm text-stone-500 hover:text-[#6B8E6B]">
                 お問い合わせ
               </Link>
+              <Link href="/company" className="block text-sm text-stone-500 hover:text-[#6B8E6B]">
+                運営会社
+              </Link>
             </div>
           </div>
         </div>
