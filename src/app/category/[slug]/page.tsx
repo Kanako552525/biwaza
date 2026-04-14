@@ -21,13 +21,12 @@ export default async function CategoryPage({
     notFound();
   }
 
-  const categoryPosts = db
+  const categoryPosts = await db
     .select()
     .from(posts)
     .where(eq(posts.category, slug))
     .orderBy(desc(sql`COALESCE(${posts.lastCommentedAt}, ${posts.createdAt})`))
-    .limit(50)
-    .all() as Post[];
+    .limit(50) as Post[];
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">

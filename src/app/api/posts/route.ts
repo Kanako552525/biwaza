@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "必須項目が不足しています" }, { status: 400 });
   }
 
-  const result = db
+  const rows = await db
     .insert(posts)
     .values({
       title,
@@ -48,8 +48,7 @@ export async function POST(request: NextRequest) {
       category,
       images: images || null,
     })
-    .returning()
-    .get();
+    .returning();
 
-  return NextResponse.json(result, { status: 201 });
+  return NextResponse.json(rows[0], { status: 201 });
 }

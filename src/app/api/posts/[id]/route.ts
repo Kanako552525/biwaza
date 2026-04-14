@@ -11,12 +11,12 @@ export async function GET(
   const postId = parseInt(id);
 
   // Increment view count
-  db.update(posts)
+  await db.update(posts)
     .set({ viewCount: sql`${posts.viewCount} + 1` })
-    .where(eq(posts.id, postId))
-    .run();
+    .where(eq(posts.id, postId));
 
-  const post = db.select().from(posts).where(eq(posts.id, postId)).get();
+  const rows = await db.select().from(posts).where(eq(posts.id, postId));
+  const post = rows[0];
 
   if (!post) {
     return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });

@@ -8,20 +8,18 @@ import type { Post } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const activePosts = db
+export default async function Home() {
+  const activePosts = await db
     .select()
     .from(posts)
     .orderBy(desc(sql`COALESCE(${posts.lastCommentedAt}, ${posts.createdAt})`))
-    .limit(20)
-    .all() as Post[];
+    .limit(20) as Post[];
 
-  const topPosts = db
+  const topPosts = await db
     .select()
     .from(posts)
     .orderBy(desc(posts.helpfulCount))
-    .limit(5)
-    .all() as Post[];
+    .limit(5) as Post[];
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">

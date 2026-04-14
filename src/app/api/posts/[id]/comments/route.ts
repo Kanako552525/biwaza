@@ -10,12 +10,11 @@ export async function GET(
   const { id } = await params;
   const postId = parseInt(id);
 
-  const result = db
+  const result = await db
     .select()
     .from(comments)
     .where(eq(comments.postId, postId))
-    .orderBy(comments.createdAt)
-    .all();
+    .orderBy(comments.createdAt);
 
   return NextResponse.json(result);
 }
@@ -32,24 +31,22 @@ export async function POST(
     return NextResponse.json({ error: "コメント内容が必要です" }, { status: 400 });
   }
 
-  const comment = db
+  const commentRows = await db
     .insert(comments)
     .values({
       postId,
       nickname: nickname || "名無しさん",
       body,
     })
-    .returning()
-    .get();
+    .returning();
 
   // Update post: increment comment count + update last_commented_at
-  db.update(posts)
+  await db.update(posts)
     .set({
       commentCount: sql`${posts.commentCount} + 1`,
       lastCommentedAt: sql`datetime('now', 'localtime')`,
     })
-    .where(eq(posts.id, postId))
-    .run();
+    .where(eq(posts.id, postId));
 
-  return NextResponse.json(comment, { status: 201 });
+  return NextResponse.json(commentRows[0], { status: 201 });
 }

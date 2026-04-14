@@ -17,10 +17,9 @@ export async function POST(
 
   const column = type === "helpful" ? posts.helpfulCount : posts.notHelpfulCount;
 
-  db.update(posts)
+  await db.update(posts)
     .set({ [type === "helpful" ? "helpfulCount" : "notHelpfulCount"]: sql`${column} + 1` })
-    .where(eq(posts.id, postId))
-    .run();
+    .where(eq(posts.id, postId));
 
   return NextResponse.json({ success: true });
 }

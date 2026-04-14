@@ -20,25 +20,22 @@ export default async function PostDetailPage({
   const postId = parseInt(id);
 
   // Increment view count
-  db.update(posts)
+  await db.update(posts)
     .set({ viewCount: sql`${posts.viewCount} + 1` })
-    .where(eq(posts.id, postId))
-    .run();
+    .where(eq(posts.id, postId));
 
-  const post = db.select().from(posts).where(eq(posts.id, postId)).get() as
-    | Post
-    | undefined;
+  const rows = await db.select().from(posts).where(eq(posts.id, postId));
+  const post = rows[0] as Post | undefined;
 
   if (!post) {
     notFound();
   }
 
-  const postComments = db
+  const postComments = await db
     .select()
     .from(comments)
     .where(eq(comments.postId, postId))
-    .orderBy(comments.createdAt)
-    .all() as Comment[];
+    .orderBy(comments.createdAt) as Comment[];
 
   const category = getCategoryBySlug(post.category);
 

@@ -18,13 +18,12 @@ export default async function SearchPage({
   let results: Post[] = [];
 
   if (query) {
-    results = db
+    results = await db
       .select()
       .from(posts)
       .where(or(like(posts.title, `%${query}%`), like(posts.body, `%${query}%`)))
       .orderBy(desc(posts.helpfulCount))
-      .limit(50)
-      .all() as Post[];
+      .limit(50) as Post[];
   }
 
   return (
