@@ -44,7 +44,7 @@ export async function POST(
   await db.update(posts)
     .set({
       commentCount: sql`${posts.commentCount} + 1`,
-      lastCommentedAt: sql`datetime('now', 'localtime')`,
+      lastCommentedAt: sql`datetime('now', '+9 hours')`,
     })
     .where(eq(posts.id, postId));
 

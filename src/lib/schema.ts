@@ -15,7 +15,7 @@ export const posts = sqliteTable("posts", {
   lastCommentedAt: text("last_commented_at"),
   createdAt: text("created_at")
     .notNull()
-    .default(sql`(datetime('now', 'localtime'))`),
+    .default(sql`(datetime('now', '+9 hours'))`),
 });
 
 export const comments = sqliteTable("comments", {
@@ -27,5 +27,5 @@ export const comments = sqliteTable("comments", {
   body: text("body").notNull(),
   createdAt: text("created_at")
     .notNull()
-    .default(sql`(datetime('now', 'localtime'))`),
+    .default(sql`(datetime('now', '+9 hours'))`),
 });
