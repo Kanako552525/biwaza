@@ -6,10 +6,27 @@ import { useState } from "react";
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: メール送信やフォームサービス（Formspree等）と連携
-    setSubmitted(true);
+    setSending(true);
+    setError("");
+
+    const form = e.currentTarget;
+    const res = await fetch("https://formspree.io/f/myklkplb", {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" },
+    });
+
+    if (res.ok) {
+      setSubmitted(true);
+    } else {
+      setError("送信に失敗しました。時間をおいて再度お試しください。");
+      setSending(false);
+    }
   };
 
   return (
@@ -104,11 +121,16 @@ export default function ContactPage() {
               />
             </div>
 
+            {error && (
+              <p className="text-sm text-red-500 bg-red-50 p-3 rounded-lg">{error}</p>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-[#6B8E6B] text-white py-3 rounded-lg font-medium hover:bg-[#5a7a5a] transition-colors"
+              disabled={sending}
+              className="w-full bg-[#6B8E6B] text-white py-3 rounded-lg font-medium hover:bg-[#5a7a5a] transition-colors disabled:opacity-50"
             >
-              送信する
+              {sending ? "送信中..." : "送信する"}
             </button>
           </form>
         )}
