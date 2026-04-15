@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "ビワザ — みんなの美容ワザ共有サイト",
   description:
     "美容テクニック・セルフケアのワザをみんなで共有するコミュニティ。スキンケア、ヘアケア、ダイエットなど、試してよかった美容ワザを投稿・評価できます。",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
