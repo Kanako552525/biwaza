@@ -31,6 +31,14 @@ export async function POST(
     return NextResponse.json({ error: "コメント内容が必要です" }, { status: 400 });
   }
 
+  // 文字数制限
+  if (body.length > 2000) {
+    return NextResponse.json({ error: "コメントは2000文字以内です" }, { status: 400 });
+  }
+  if (nickname && nickname.length > 30) {
+    return NextResponse.json({ error: "ニックネームは30文字以内です" }, { status: 400 });
+  }
+
   const commentRows = await db
     .insert(comments)
     .values({

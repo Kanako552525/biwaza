@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { posts } from "@/lib/schema";
 import { desc, like, or, eq } from "drizzle-orm";
+import { categories } from "@/lib/categories";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -37,6 +38,23 @@ export async function POST(request: NextRequest) {
 
   if (!title || !postBody || !category) {
     return NextResponse.json({ error: "必須項目が不足しています" }, { status: 400 });
+  }
+
+  // 文字数制限
+  if (title.length > 100) {
+    return NextResponse.json({ error: "タイトルは100文字以内です" }, { status: 400 });
+  }
+  if (postBody.length > 5000) {
+    return NextResponse.json({ error: "本文は5000文字以内です" }, { status: 400 });
+  }
+  if (nickname && nickname.length > 30) {
+    return NextResponse.json({ error: "ニックネームは30文字以内です" }, { status: 400 });
+  }
+
+  // カテゴリ検証
+  const validSlugs = categories.map((c) => c.slug);
+  if (!validSlugs.includes(category)) {
+    return NextResponse.json({ error: "無効なカテゴリです" }, { status: 400 });
   }
 
   const rows = await db

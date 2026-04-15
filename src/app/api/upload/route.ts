@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 import { randomUUID } from "crypto";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+// MIMEタイプから安全な拡張子を導出（ユーザー入力のファイル名は使わない）
+const MIME_TO_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/gif": "gif",
+  "image/webp": "webp",
+};
+
+const ALLOWED_TYPES = Object.keys(MIME_TO_EXT);
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(request: NextRequest) {
@@ -35,14 +42,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const ext = file.name.split(".").pop() || "jpg";
-    const fileName = `${randomUUID()}.${ext}`;
-    const filePath = path.join(process.cwd(), "public", "uploads", fileName);
+    // 安全な拡張子をMIMEタイプから取得（ユーザー入力のファイル名は使わない）
+    const ext = MIME_TO_EXT[file.type];
+    const fileName = `uploads/${randomUUID()}.${ext}`;
 
-    const bytes = await file.arrayBuffer();
-    await writeFile(filePath, Buffer.from(bytes));
+    // Vercel Blobにアップロード
+    const blob = await put(fileName, file, {
+      access: "public",
+      contentType: file.type,
+    });
 
-    savedPaths.push(`/uploads/${fileName}`);
+    savedPaths.push(blob.url);
   }
 
   return NextResponse.json({ paths: savedPaths });

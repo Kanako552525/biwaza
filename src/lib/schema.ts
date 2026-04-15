@@ -18,6 +18,18 @@ export const posts = sqliteTable("posts", {
     .default(sql`(datetime('now', '+9 hours'))`),
 });
 
+export const votes = sqliteTable("votes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  postId: integer("post_id")
+    .notNull()
+    .references(() => posts.id),
+  ipHash: text("ip_hash").notNull(),
+  type: text("type").notNull(), // "helpful" or "not_helpful"
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(datetime('now', '+9 hours'))`),
+});
+
 export const comments = sqliteTable("comments", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   postId: integer("post_id")
