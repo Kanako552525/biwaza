@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { useState } from "react";
+
+const TURNSTILE_SITE_KEY = "0x4AAAAAAC_ESN0ArfvGRM4V";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -125,6 +128,11 @@ export default function ContactPage() {
               <p className="text-sm text-red-500 bg-red-50 p-3 rounded-lg">{error}</p>
             )}
 
+            <div
+              className="cf-turnstile"
+              data-sitekey={TURNSTILE_SITE_KEY}
+            />
+
             <button
               type="submit"
               disabled={sending}
@@ -135,6 +143,12 @@ export default function ContactPage() {
           </form>
         )}
       </div>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        strategy="afterInteractive"
+        async
+        defer
+      />
     </div>
   );
 }
