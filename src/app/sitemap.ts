@@ -31,9 +31,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .orderBy(desc(posts.id))
     .limit(5000);
 
+  // SQLiteのJST文字列（例: "2026-04-22 10:30:00"）をDateに変換
+  const toDate = (s: string | null | undefined): Date => {
+    if (!s) return new Date();
+    // JSTとして解釈するため "T" と "+09:00" を付与
+    const iso = s.includes("T") ? s : s.replace(" ", "T") + "+09:00";
+    const d = new Date(iso);
+    return isNaN(d.getTime()) ? new Date() : d;
+  };
+
   const postEntries: MetadataRoute.Sitemap = rows.map((r) => ({
     url: `${BASE_URL}/post/${r.id}`,
-    lastModified: r.lastCommentedAt ?? r.createdAt,
+    lastModified: toDate(r.lastCommentedAt ?? r.createdAt),
     changeFrequency: "weekly",
     priority: 0.6,
   }));
