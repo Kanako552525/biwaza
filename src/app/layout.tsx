@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -62,11 +61,10 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${geist.variable} h-full antialiased`}>
       <head>
-        <Script
+        <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#FAF8F5] font-[var(--font-geist-sans)] text-[#3D3D3D]">
