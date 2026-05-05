@@ -44,8 +44,8 @@ export default function CompanyPage() {
                   所在地
                 </th>
                 <td className="px-4 py-3 text-stone-600">
-                  〒107-0062<br />
-                  東京都港区南青山3丁目1-36
+                  〒108-0014<br />
+                  東京都港区芝5丁目36-4 札の辻スクエア9F
                 </td>
               </tr>
               <tr className="border-b border-stone-200">
